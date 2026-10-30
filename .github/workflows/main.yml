@@ -3,29 +3,24 @@ name: Build si jimpit APK
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build-apk:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.24.5'
           channel: 'stable'
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Build APK - si jimpit
-        run: flutter build apk --release --build-name="si jimpit" --build-number=1
-
+      - name: Generate Android folder if missing
+        run: |
+          flutter create . --platforms=android --project-name si_jimpit
+          flutter pub get
+      - name: Build APK
+        run: flutter build apk --release --build-name="si jimpit"
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: si_jimpit-apk
+          name: si-jimpit-apk
           path: build/app/outputs/flutter-apk/app-release.apk
