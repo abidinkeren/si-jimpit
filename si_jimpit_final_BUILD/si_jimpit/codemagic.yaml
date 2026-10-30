@@ -1,0 +1,24 @@
+workflows:
+  android-workflow:
+    name: si jimpit Android
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter pub get
+      - name: Build APK si jimpit
+        script: |
+          flutter build apk --release --build-name="si jimpit"
+          mv build/app/outputs/flutter-apk/app-release.apk si_jimpit.apk
+    artifacts:
+      - build/**/outputs/**/*.apk
+      - si_jimpit.apk
+    publishing:
+      email:
+        recipients:
+          - abidin@example.com
